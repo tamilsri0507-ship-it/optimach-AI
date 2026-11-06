@@ -9,6 +9,8 @@ build/
 __pycache__/
 */__pycache__/
 *.py[cod]
+*.db
+backend/optimach_backup.db
 *$py.class
 *.so
 .Python
@@ -48,5 +50,7 @@ npm-debug.log*
 Thumbs.db
 __pycache__/
 *.py[cod]
-
+*.db
 backend/optimach_backup.db
+
+

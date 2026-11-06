@@ -1,12 +1,12 @@
 services:
   # -------------------------------------------------------------
-  # OptiMach AI Backend (FastAPI Web Service)
+  # OptiMach AI All-in-One Full-Stack Web Service
   # -------------------------------------------------------------
   - type: web
-    name: optimach-ai-backend
+    name: optimach-ai
     runtime: python
     plan: free
-    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    buildCommand: npm install && npm run build && pip install --upgrade pip && pip install -r requirements.txt
     startCommand: uvicorn backend.app:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHON_VERSION
@@ -14,25 +14,4 @@ services:
       - key: CORS_ORIGINS
         value: "*"
     healthCheckPath: /api/health
-    autoDeploy: true
-
-  # -------------------------------------------------------------
-  # OptiMach AI Frontend (React 18 + Vite Static Site)
-  # -------------------------------------------------------------
-  - type: static_site
-    name: optimach-ai-frontend
-    plan: free
-    rootDir: frontend
-    buildCommand: npm install && npm run build
-    staticPublishPath: dist
-    envVars:
-      - key: VITE_API_URL
-        fromService:
-          type: web
-          name: optimach-ai-backend
-          property: host
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
     autoDeploy: true

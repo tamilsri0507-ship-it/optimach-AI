@@ -16,6 +16,11 @@
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": [
+    "frontend/src",
+    "frontend/src/**/*.ts",
+    "frontend/src/**/*.tsx",
+    "src"
+  ]
 }
 

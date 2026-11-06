@@ -748,12 +748,27 @@ def reset_seed():
     init_db()
     return {"message": "Database successfully reset to initial plant state"}
 
-# --- Static Frontend Delivery (Production & Render) ---
+# --- Static Frontend Delivery (Production & Render Web Service) ---
 from fastapi.staticfiles import StaticFiles
 
+root_dist = os.path.join(os.path.dirname(os.path.dirname(__file__)), "dist")
 frontend_dist = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend", "dist")
-if os.path.exists(frontend_dist):
-    app.mount("/", StaticFiles(directory=frontend_dist, html=True), name="frontend")
+dist_dir = root_dist if os.path.exists(root_dist) else (frontend_dist if os.path.exists(frontend_dist) else None)
+
+if dist_dir and os.path.exists(dist_dir):
+    assets_dir = os.path.join(dist_dir, "assets")
+    if os.path.exists(assets_dir):
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
+
+    @app.get("/{full_path:path}")
+    def serve_frontend_spa(full_path: str):
+        target = os.path.join(dist_dir, full_path)
+        if full_path and os.path.isfile(target):
+            return FileResponse(target)
+        index_file = os.path.join(dist_dir, "index.html")
+        if os.path.exists(index_file):
+            return FileResponse(index_file)
+        raise HTTPException(status_code=404, detail="Frontend index.html not found")
 else:
     @app.get("/")
     def index_fallback():

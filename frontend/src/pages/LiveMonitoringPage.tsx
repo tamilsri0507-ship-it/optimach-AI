@@ -60,7 +60,7 @@ export const LiveMonitoringPage: React.FC<LiveMonitoringPageProps> = ({
   const selectedMachine = machines.find((m) => m.id === selectedMachineId) || machines[0];
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
+    let timer: ReturnType<typeof setInterval>;
 
     const poll = async () => {
       try {
