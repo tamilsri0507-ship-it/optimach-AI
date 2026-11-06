@@ -46,3 +46,7 @@ npm-debug.log*
 .idea/
 .DS_Store
 Thumbs.db
+__pycache__/
+*.py[cod]
+
+backend/optimach_backup.db
