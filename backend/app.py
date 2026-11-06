@@ -1,9 +1,19 @@
 import os
+import sys
 import io
 import json
+from pathlib import Path
 from datetime import datetime, timedelta
 import random
 from typing import Optional, List
+
+# Ensure project root and backend directory are always in sys.path
+_root_dir = str(Path(__file__).resolve().parent.parent)
+_backend_dir = str(Path(__file__).resolve().parent)
+if _root_dir not in sys.path:
+    sys.path.insert(0, _root_dir)
+if _backend_dir not in sys.path:
+    sys.path.insert(0, _backend_dir)
 
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Query, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,8 +21,12 @@ from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel, Field
 import pandas as pd
 
-from backend.database import get_db, init_db, DB_FILE
-from backend.ml_engine import ml_engine, BASELINES
+try:
+    from backend.database import get_db, init_db, DB_FILE
+    from backend.ml_engine import ml_engine, BASELINES
+except ImportError:
+    from database import get_db, init_db, DB_FILE
+    from ml_engine import ml_engine, BASELINES
 
 # Initialize FastAPI app
 app = FastAPI(
